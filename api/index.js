@@ -28,7 +28,7 @@ app.use(helmet({
 }));
 app.use(compression());
 app.use(cors({
-  origin:  "https://avx-delta.vercel.app" || "",
+  origin:  "https://avx-delta.vercel.app" ,
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
