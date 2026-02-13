@@ -14,30 +14,63 @@ const connectDB = require('./config/db');
 // Import routes
 const applicationRoutes = require('./routes/appRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
-const contactRoutes = require('./routes/contactRoutes')
+const contactRoutes = require('./routes/contactRoutes');
 
 // Connect to MongoDB
 connectDB();
 
 const app = express();
 
-// Middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-app.use(compression());
+// ---------------------
+// CORS Configuration
+// ---------------------
+const allowedOrigins = [
+  'https://avx-delta.vercel.app',
+  'http://localhost:5173', // for local development
+  'http://localhost:3000', // for local development
+  'http://localhost:5000', // for local development
+];
+
 app.use(cors({
-  origin:  "https://avx-delta.vercel.app" ,
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `The CORS policy for this site does not allow access from the specified origin: ${origin}`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true, // allow cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+}));
+
+// Preflight for all routes
+app.options('*', cors({
+  origin: allowedOrigins,
   credentials: true,
 }));
+
+// ---------------------
+// Middleware
+// ---------------------
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" } // allow cross-origin static resources
+}));
+app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('dev'));
 
+// ---------------------
 // Static files
+// ---------------------
 app.use('/uploads', express.static('uploads'));
 
+// ---------------------
 // Routes
+// ---------------------
 app.use('/api/applications', applicationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/contacts', contactRoutes);
@@ -65,7 +98,9 @@ app.get('/', (req, res) => {
   });
 });
 
+// ---------------------
 // Error handling middleware
+// ---------------------
 app.use((err, req, res, next) => {
   console.error('Error:', err);
 
@@ -113,7 +148,9 @@ app.use((req, res) => {
   });
 });
 
+// ---------------------
 // Start server
+// ---------------------
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
