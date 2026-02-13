@@ -10,12 +10,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Import configurations
-const connectDB = require('../config/db');
-
+const connectDB = require('./config/db');
 // Import routes
-const applicationRoutes = require('../routes/appRoutes');
-const uploadRoutes = require('../routes/uploadRoutes');
-const contactRoutes = require('../routes/contactRoutes')
+const applicationRoutes = require('./routes/appRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const contactRoutes = require('./routes/contactRoutes')
 
 // Connect to MongoDB
 connectDB();
