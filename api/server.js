@@ -10,12 +10,12 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Import configurations
-const connectDB = require('./config/db');
+const connectDB = require('../config/db');
 
 // Import routes
-const applicationRoutes = require('./routes/appRoutes');
-const uploadRoutes = require('./routes/uploadRoutes');
-const contactRoutes = require('./routes/contactRoutes')
+const applicationRoutes = require('../routes/appRoutes');
+const uploadRoutes = require('../routes/uploadRoutes');
+const contactRoutes = require('../routes/contactRoutes')
 
 // Connect to MongoDB
 connectDB();
@@ -28,7 +28,7 @@ app.use(helmet({
 }));
 app.use(compression());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "https://avx-delta.vercel.app",
+  origin:  "https://avx-delta.vercel.app" || "",
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
