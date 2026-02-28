@@ -15,6 +15,7 @@ const connectDB = require('./config/db');
 const applicationRoutes = require('./routes/appRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const blogRoutes = require('./routes/blogRoutes.js');
 
 // Connect to MongoDB
 connectDB();
@@ -74,6 +75,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/applications', applicationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use("/api/blogs", blogRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
